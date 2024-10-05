@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users',
+            'username' => 'required|string|exists:users',
             'password' => 'required',
         ];
     }
@@ -30,7 +30,7 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.exists' => 'Email address not found',
+            'username.exists' => 'Username not found',
         ];
     }
 }

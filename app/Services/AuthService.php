@@ -21,7 +21,7 @@ class AuthService {
         }
 
         $user = auth()->user();
-        $token = $user->createToken(config('auth.api_key'))->plainTextToken;
+        $token = $user->createToken('auth')->plainTextToken;
         return $this->successResponse("Login successful", compact('user', 'token'));
 
     }
@@ -30,7 +30,7 @@ class AuthService {
         $data['password'] = Hash::make($data['password']);
         $user = $this->user->create($data);
         Auth::login($user);
-        $token = $user->createToken(config('auth.api_key'))->plainTextToken;
+        $token = $user->createToken('auth')->plainTextToken;
         return $this->createdResponse("Registration successful", compact('user', 'token'));
 
     }
