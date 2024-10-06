@@ -65,7 +65,7 @@
                                         <td>{{$employee->created_at->format('d M, Y')}}</td>
                                     </tr>
                                     @empty
-                                        <x-empty-table colspan="3" />
+                                        <x-empty-table colspan="4" />
                                     @endforelse
                                 </tbody>
                             </table>
@@ -103,7 +103,7 @@
                                         <td>{{$schedule->created_at->format('d M, Y')}}</td>
                                     </tr>
                                     @empty
-                                        <x-empty-table colspan="3" />
+                                        <x-empty-table colspan="5" />
                                     @endforelse
                                 </tbody>
                             </table>

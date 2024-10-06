@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\Schedule;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -33,7 +34,6 @@ class EmployeeController extends Controller
     public function index(Request $request): View
     {
         $search = $request->search;
-        $limit = $request->limit;
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
 
@@ -42,12 +42,22 @@ class EmployeeController extends Controller
         })
             ->filterByDate($fromDate, $toDate)
             ->latest()
-            ->paginate($limit);
+            ->withCount('schedules')
+            ->paginate();
+
+        return view('admin.employee.index', compact('employees'));
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function create(): View
     {
-        return $this->taskService->store($request->validated());
+        return view('admin.employee.create');
+    }
+
+    public function store(StoreRequest $request): RedirectResponse
+    {
+        Employee::create($request->validated());
+
+        return back()->with('success', 'Employee added successfully');
     }
 
     public function show($id): JsonResponse

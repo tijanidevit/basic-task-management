@@ -24,6 +24,11 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string',
             'description' => 'required|string',
+            'employees' => 'required|array',
+            'start_date' => 'required|date|after:today',
+            'end_date' => 'required|date|after:start_date',
+            'staff_counts' => 'required|integer',
+            'shifts' => 'required|string',
         ];
     }
 }

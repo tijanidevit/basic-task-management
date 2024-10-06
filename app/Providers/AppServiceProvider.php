@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
             return $data ? $this->where($field, 'like', "%$data%") : $this;
         });
 
+        Builder::macro('orSearch', function ($field, $data) {
+            return $data ? $this->orWhere($field, 'like', "%$data%") : $this;
+        });
+
         Builder::macro('filterByDate', function ($dateFrom, $dateTo, $column='created_at') {
             if ($dateFrom && $dateTo) {
                 return $this->whereBetween($column, [
@@ -41,5 +46,7 @@ class AppServiceProvider extends ServiceProvider
             }
             return $this;
         });
+
+        Paginator::useBootstrapFive();
     }
 }

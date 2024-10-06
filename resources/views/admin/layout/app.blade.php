@@ -6,7 +6,7 @@
 
 <body>
 
-    <div class="main-wrapper">
+    <div class="main-wrapper mb-5">
 
         @include('admin.layout.header')
 

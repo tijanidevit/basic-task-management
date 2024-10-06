@@ -14,3 +14,5 @@
 
 <script src="/assets/js/app.js"></script>
 <script src="/assets/js/rocket-loader.min.js"></script>
+
+@yield('scripts')
