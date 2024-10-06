@@ -45,6 +45,7 @@
                                         <th>Email</th>
                                         <th>Total schedules</th>
                                         <th>Added date</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,6 +55,11 @@
                                         <td>{{$employee->email}}</td>
                                         <td>{{$employee->schedules_count}}</td>
                                         <td>{{$employee->created_at->format('d M, Y')}}</td>
+                                        <td>
+                                            <a href="{{route('employee.show', $employee->id)}}" class="btn btn-primary">
+                                                <i class="fas fa-bell me-2"></i>View
+                                            </a>
+                                        </td>
                                     </tr>
                                     @empty
                                         <x-empty-table colspan="4" />

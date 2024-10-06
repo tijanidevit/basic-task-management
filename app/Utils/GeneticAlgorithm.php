@@ -3,49 +3,28 @@
 namespace App\Utils;
 
 use Carbon\Carbon;
-use DateTime;
 
 class GeneticAlgorithm
 {
-    public static function generateChromosome($data)
+    public static function generateChromosome($employees, $shifts, $startDate, $endDate, $staffPerShift)
     {
-        $employees = $data['employees'];
-        $start_date = new DateTime($data['start_date']);
-        $end_date = new DateTime($data['end_date']);
-        $staff_count = $data['staff_counts'];
-        $shifts = explode(',', $data['shifts']);
+        $chromosome = [];
+        $currentDate = $startDate;
 
-        $assignments = [];
-
-        $employeePool = $employees;
-
-        function rotateEmployees(&$employees)
-        {
-            $first = array_shift($employees);
-            array_push($employees, $first);
-        }
-
-        for ($date = clone $start_date; $date <= $end_date; $date->modify('+1 day')) {
-            if ($date->format('N') == 7) {
-                continue;
-            }
-
-            foreach ($shifts as $shift) {
-                $assignedEmployees = array_slice($employeePool, 0, $staff_count);
-
-                $assignments[] = [
-                    'date' => $date->format('Y-m-d'),
-                    'shift' => $shift,
-                    'employees' => $assignedEmployees,
-                ];
-
-                for ($i = 0; $i < $staff_count; $i++) {
-                    rotateEmployees($employeePool);
+        while ($currentDate <= $endDate) {
+            // Skip Sundays
+            if (date('N', strtotime($currentDate)) != 7) {
+                $daySchedule = [];
+                foreach ($shifts as $shift) {
+                    $staffForShift = array_rand($employees, $staffPerShift); // Randomly select staff
+                    $daySchedule[$shift] = array_map(fn($index) => $employees[$index], $staffForShift); // Map the indexes to employee names
                 }
+                $chromosome[] = $daySchedule;
             }
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
         }
 
-        return $assignments;
+        return $chromosome;
     }
 
     private static function getRandomSample($array, $size)

@@ -66,7 +66,7 @@
                                     @forelse ($schedules as $schedule)
                                         <tr>
                                             <td>{{ $schedule->title }}</td>
-                                            <td>{{ $schedule->start_date->format('d m, Y') }} - {{ $schedule->end_date->format('d m, Y') }}</td>
+                                            <td>{{ $schedule->start_date->format('d M, Y') }} - {{ $schedule->end_date->format('d M, Y') }}</td>
                                             <td class="">{{ $schedule->shifts }}</td>
                                             <td>{{ $schedule->employees_count }}</td>
                                             <td>{{ $schedule->created_at->format('d M, Y') }}</td>

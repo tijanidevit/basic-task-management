@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Schedule\StoreRequest;
 use App\Models\Employee;
 use App\Models\Schedule;
-use App\Utils\GeneticAlgorithm;
+use App\Helpers\GeneticAlgorithm;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -50,7 +50,7 @@ class ScheduleController extends Controller
 
         $schedule = Schedule::create(Arr::except($data, 'employees'));
 
-        $assignments = GeneticAlgorithm::generateChromosome($data);
+        $assignments = (new GeneticAlgorithm($data['employees'], $data['start_date'], $data['end_date'], $data['staff_counts'], $data['shifts']))->generateSchedule();
 
         $schedule_id = $schedule->id;
 
@@ -59,7 +59,7 @@ class ScheduleController extends Controller
         foreach ($assignments as $assignment) {
             $date = $assignment['date'];
             $shift = $assignment['shift'];
-            $employees = $assignment['employees'];
+            $employees = $assignment['staff'];
 
             foreach ($employees as $employee_id) {
                 $employeeSchedules[] = [
@@ -98,7 +98,7 @@ class ScheduleController extends Controller
             });
         }
 
-        $employeeSchedules = $employeeSchedules->paginate();
+        $employeeSchedules = $employeeSchedules->get();
 
         $appointments = $employeeSchedules->groupBy('date');
 

@@ -60,23 +60,30 @@ class EmployeeController extends Controller
         return back()->with('success', 'Employee added successfully');
     }
 
-    public function show($id): JsonResponse
+    public function show(Request $request,$id): View
     {
-        return $this->taskService->show($id);
-    }
+        $employee = Employee::with(['employeeSchedules.schedule'])->withCount('employeeSchedules')->find($id);
 
-    public function update(UpdateRequest $request): JsonResponse
-    {
-        return $this->taskService->update($request->validated());
-    }
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+        $employeeName = $request->input('search');
 
-    public function delete($id): JsonResponse
-    {
-        return $this->taskService->delete($id);
-    }
+        $employeeSchedules = $employee->employeeSchedules();
 
-    public function toggleStatus($id): JsonResponse
-    {
-        return $this->taskService->toggleStatus($id);
+        if ($fromDate && $toDate) {
+            $employeeSchedules = $employeeSchedules->whereBetween('date', [$fromDate, $toDate]);
+        }
+
+        if ($employeeName) {
+            $employeeSchedules = $employeeSchedules->whereHas('employee', function ($query) use ($employeeName) {
+                $query->where('name', 'like', '%' . $employeeName . '%');
+            });
+        }
+
+        $employeeSchedules = $employeeSchedules->get();
+
+        $appointments = $employeeSchedules->groupBy('date');
+
+        return view('admin.employee.show', compact('employee', 'appointments'));
     }
 }
