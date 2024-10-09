@@ -11,9 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: deploy-group    # optional: ensure only one action runs at a time
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer
+
       - name: Install dependencies
         run: composer install --no-dev --optimize-autoloader
-      - uses: actions/checkout@v4
+
+
+
+    
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
